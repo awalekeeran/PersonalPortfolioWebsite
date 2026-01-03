@@ -113,9 +113,34 @@ document.addEventListener('DOMContentLoaded', function() {
     
     
     // ============================================================
-    // Scroll to Top Button
+    // Scroll to Top Button with Progress Circle
     // ============================================================
     const scrollTopBtn = document.getElementById('scrollTop');
+    const scrollProgressCircle = document.getElementById('scrollProgressCircle');
+    
+    // Calculate circle circumference for progress animation
+    if (scrollProgressCircle) {
+        const radius = scrollProgressCircle.r.baseVal.value;
+        const circumference = 2 * Math.PI * radius;
+        
+        // Set up the circle
+        scrollProgressCircle.style.strokeDasharray = circumference;
+        scrollProgressCircle.style.strokeDashoffset = circumference;
+        
+        function updateScrollProgress() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = scrollTop / docHeight;
+            
+            // Update circle progress
+            const offset = circumference - (scrollPercent * circumference);
+            scrollProgressCircle.style.strokeDashoffset = offset;
+        }
+        
+        // Add scroll listener for progress
+        window.addEventListener('scroll', updateScrollProgress);
+        updateScrollProgress(); // Initial call
+    }
     
     function toggleScrollTopButton() {
         if (window.scrollY > 300) {
